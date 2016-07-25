@@ -24,29 +24,17 @@ var gulp 		= require('gulp'),
 // =======================================================
 
 // ========================================================
-// IMG_MIN
-// ========================================================
-
-var imgmin = require(path.module + 'gulp-imagemin');
-
-gulp.task('imgmin', function (){
-    gulp.src('src/images/*')
-        .pipe(imgmin())
-        .pipe(gulp.dest('dist/images'))
-});
-
-// ========================================================
 // WEB_SERVER
 // ========================================================
 
 var server = require(path.module + 'gulp-webserver');
 
 gulp.task('server', function () {
-    gulp.src(path.dist) // 公開したい静的ファイルを配置したディレクトリを指定する
+    gulp.src(path.dist)
+		.pipe(plumber())
         .pipe(server({
             host: 'localhost',
-            port: 8000,
-            livereload: true
+            port: 8000
         }));
 });
 
@@ -75,6 +63,7 @@ gulp.task("ejs", function(){
     gulp.src(EJS_SRC_PATH)
         .pipe(plumber())
         .pipe(ejs('',{"ext": ".html"}))
+		.pipe(prettify({indent_size: 4}))
         .pipe(gulp.dest(EJS_DIST_PATH));
 });
 
